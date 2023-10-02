@@ -1,12 +1,21 @@
 #!bin/bash
 
+set -e
+
 if [[ -f "/workspaces/frappe_codespace/frappe-bench/apps/frappe" ]]
 then
     echo "Bench already exists, skipping init"
     exit 0
 fi
 
-rm -rf /workspaces/frappe_codespace/.git 
+rm -rf /workspaces/frappe_codespace/.git
+
+source /home/frappe/.nvm/nvm.sh
+nvm alias default 18
+nvm use 18
+
+echo "nvm use 18" >> ~/.bashrc
+cd /workspace
 
 bench init \
 --ignore-exist \
@@ -23,6 +32,7 @@ bench set-redis-socketio-host redis-socketio:6379
 
 # Remove redis from Procfile
 sed -i '/redis/d' ./Procfile
+
 
 bench new-site dev.localhost \
 --mariadb-root-password 123 \
